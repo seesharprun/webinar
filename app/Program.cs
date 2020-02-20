@@ -8,7 +8,7 @@ namespace App
     {        
         public static void Main(string[] args) => 
             Console.WriteAscii(
-                new MessengerService("Webinar").GetMessage()
+                new MessengerService("Audience").GetMessage()
             );
     }
 }
