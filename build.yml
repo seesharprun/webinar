@@ -1,17 +1,28 @@
 trigger:
 - master
+
 pr: 
 - master
+
 pool:
   vmImage: ubuntu-latest
 container: mcr.microsoft.com/dotnet/core/sdk:3.1
+
 steps:
 - script: dotnet --version
   displayName: Check version of .NET container
 - script: dotnet test
   displayName: Test .NET application
   workingDirectory: ./app.tests/
-- script: dotnet publish --configuration Release --output out/win --self-contained --runtime win-x64 /p:PublishSingleFile=true /p:IncludeSymbolsInSingleFile=true
+- script: dotnet run
+  displayName: Run .NET application
+  workingDirectory: ./app/
+- script: dotnet publish --configuration Release --output out/win-x64 --self-contained --runtime win-x64 /p:PublishSingle=true /p:IncludeSymbolsInSingleFile=true
   displayName: Publish .NET app for Windows
   workingDirectory: ./app/
-  condition: and(always(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- script: dotnet publish --configuration Release --output out/linux-x64 --self-contained --runtime linux-x64 /p:PublishSingle=true /p:IncludeSymbolsInSingleFile=true
+  displayName: Publish .NET app for Linux
+  workingDirectory: ./app/
+- script: dotnet publish --configuration Release --output out/osx-x64 --self-contained --runtime osx-x64 /p:PublishSingle=true /p:IncludeSymbolsInSingleFile=true
+  displayName: Publish .NET app for macOS
+  workingDirectory: ./app/
